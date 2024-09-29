@@ -26,7 +26,20 @@ class GithubAPI {
     static func decodeRepository(from jsonData: Data) throws -> [Repository]? {
         let decoder = JSONDecoder()
         
-        let response = try decoder.decode([String: [Repository]].self, from: jsonData)
-        return response["items"]
+        let response = try decoder.decode(GithubRepositoryResponse.self, from: jsonData)
+        
+        return response.items
+    }
+    
+    struct GithubRepositoryResponse: Decodable {
+        let items: [Repository]
+        let incompleteResults: Int
+        let totalCount: Int
+        
+        enum CodingKeys: String, CodingKey {
+            case items
+            case incompleteResults = "incomplete_results"
+            case totalCount = "total_count"
+        }
     }
 }
