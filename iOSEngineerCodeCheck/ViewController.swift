@@ -17,7 +17,6 @@ class ViewController: UITableViewController, UISearchBarDelegate {
     var task: URLSessionTask?
     var word: String!
     var url: String!
-    var idx: Int!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,6 +57,7 @@ class ViewController: UITableViewController, UISearchBarDelegate {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "Detail" {
+            let idx = sender as! Int
             let dtl = segue.destination as! ViewController2
             dtl.repo = self.repo[idx]
         }
@@ -80,7 +80,6 @@ class ViewController: UITableViewController, UISearchBarDelegate {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // 画面遷移時に呼ばれる
-        idx = indexPath.row
-        performSegue(withIdentifier: "Detail", sender: self)
+        performSegue(withIdentifier: "Detail", sender: indexPath.row)
     }
 }
