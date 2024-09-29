@@ -20,6 +20,11 @@ class SearchViewController: UITableViewController {
         super.viewDidLoad()
         searchBar.text = "GitHubのリポジトリを検索できるよー"
         searchBar.delegate = self
+        
+        //MARK: Test
+        searchBar.accessibilityTraits = .searchField
+        searchBar.accessibilityIdentifier = "searchBar"
+        searchBar.isAccessibilityElement = true
     }
 
     // 画面遷移時に呼ばれる

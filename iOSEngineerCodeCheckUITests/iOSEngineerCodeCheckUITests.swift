@@ -9,34 +9,52 @@
 import XCTest
 
 class iOSEngineerCodeCheckUITests: XCTestCase {
-
+    
+    var app: XCUIApplication!
+    
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() throws {
-        // UI tests must launch the application that they test.
-        let app = XCUIApplication()
+        app = XCUIApplication()
         app.launch()
-
-        // Use recording to get started writing UI tests.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
-
+    
+    override func tearDownWithError() throws {
+        app = nil
+    }
+    
+    func testSearchBarInput() throws {
+        let searchBar = app.searchFields["searchBar"]
+        XCTAssertTrue(searchBar.exists, "検索バーが表示されていません。")
+        
+        searchBar.tap()
+        
+        // キーボードが表示されるまで待機
+        let keyboard = app.keyboards.firstMatch
+        XCTAssertTrue(keyboard.waitForExistence(timeout: 5), "キーボードが表示されませんでした。")
+        
+        searchBar.typeText("Swift\n")
+        
+        // 検索結果が表示されるまで待機
+        let table = app.tables.element(boundBy: 0)
+        XCTAssertTrue(table.waitForExistence(timeout: 5), "検索結果が表示されませんでした。")
+    }
+    
+    func testDetailViewNavigation() throws {
+        let table = app.tables.element(boundBy: 0)
+        
+        if table.cells.count > 0 {
+            let firstCell = table.cells.element(boundBy: 0)
+            firstCell.tap()
+            
+            let detailTitleLabel = app.staticTexts["titleLabel"]
+            XCTAssertTrue(detailTitleLabel.exists, "詳細画面のタイトルラベルが表示されていません。")
+        }
+    }
+    
     func testLaunchPerformance() throws {
-        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, *) {
-            // This measures how long it takes to launch your application.
+        if #available(iOS 13.0, *) {
             measure(metrics: [XCTApplicationLaunchMetric()]) {
-                XCUIApplication().launch()
+                app.launch()
             }
         }
     }
