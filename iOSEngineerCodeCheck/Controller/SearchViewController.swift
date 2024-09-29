@@ -12,7 +12,7 @@ class SearchViewController: UITableViewController {
 
     @IBOutlet weak var searchBar: UISearchBar!
 
-    var repositoryList: [[String: Any]] = []
+    var repositoryList: [Repository] = []
 
     var networkTask: URLSessionTask?
 
@@ -48,8 +48,8 @@ class SearchViewController: UITableViewController {
         let cell = UITableViewCell()
         let repository = repositoryList[indexPath.row]
 
-        cell.textLabel?.text = repository["full_name"] as? String ?? ""
-        cell.detailTextLabel?.text = repository["language"] as? String ?? ""
+        cell.textLabel?.text = repository.fullName
+        cell.detailTextLabel?.text = repository.language
         cell.tag = indexPath.row
 
         return cell
@@ -78,24 +78,13 @@ extension SearchViewController: UISearchBarDelegate {
         }
 
         if searchWord.count != 0 {
-            let url = "https://api.github.com/search/repositories?q=\(searchWord)"
-            networkTask = URLSession.shared.dataTask(with: URL(string: url)!) { (data, res, err) in
-                if let err {
-                    print("error: \(err)")
-                    return
-                }
-                
-                if let object = try! JSONSerialization.jsonObject(with: data!) as? [String: Any] {
-                    if let items = object["items"] as? [[String: Any]] {
-                        self.repositoryList = items
-                        DispatchQueue.main.async {
-                            // これ呼ばなきゃリストが更新されません
-                            self.tableView.reloadData()
-                        }
-                    }
+            Task {
+                do {
+                    repositoryList = try await GithubAPI.fetchRepositories(searchWord: searchWord) ?? []
+                } catch {
+                    print(error)
                 }
             }
-            networkTask?.resume()
         }
     }
 }

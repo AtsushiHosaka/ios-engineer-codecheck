@@ -21,51 +21,51 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var forksLabel: UILabel!
     @IBOutlet weak var issuesLabel: UILabel!
 
-    var repository: [String: Any] = [:]
+    var repository: Repository?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        languageLabel.text = "Written in \(repository["language"] as? String ?? "")"
-        stargazersLabel.text = "\(repository["stargazers_count"] as? Int ?? 0) stars"
-        watchersLabel.text = "\(repository["watchers_count"] as? Int ?? 0) watchers"
-        forksLabel.text = "\(repository["forks_count"] as? Int ?? 0) forks"
-        issuesLabel.text = "\(repository["open_issues_count"] as? Int ?? 0) open issues"
+        titleLabel.text = repository?.fullName
+        languageLabel.text = "Written in \(repository?.language ?? "unknown")"
+        stargazersLabel.text = "\(repository?.stargazersCount ?? 0) stars"
+        watchersLabel.text = "\(repository?.watchersCount ?? 0) watchers"
+        forksLabel.text = "\(repository?.forksCount ?? 0) forks"
+        issuesLabel.text = "\(repository?.openIssuesCount ?? 0) open issues"
         
         fetchAvatarImage()
     }
 
     func fetchAvatarImage() {
-        titleLabel.text = repository["full_name"] as? String
-
-        if let owner = repository["owner"] as? [String: Any] {
-            if let imgURL = owner["avatar_url"] as? String {
-                guard let url = URL(string: imgURL) else {
-                    print("error: cannot create URL from \(imgURL)")
+        if let owner = repository?.owner {
+            let imgURL = owner.avatarUrl
+            
+            guard let url = URL(string: imgURL) else {
+                print("error: cannot create URL from \(imgURL)")
+                return
+            }
+            
+            URLSession.shared.dataTask(with: url) { (data, res, err) in
+                if let err {
+                    print("error: \(err)")
                     return
                 }
                 
-                URLSession.shared.dataTask(with: url) { (data, res, err) in
-                    if let err {
-                        print("error: \(err)")
-                        return
-                    }
-                    
-                    guard let data else {
-                        print("error: cannot get data from \(url)")
-                        return
-                    }
-                    
-                    guard let img = UIImage(data: data) else {
-                        print("error: cannot create image from \(url)")
-                        return
-                    }
-                    
-                    DispatchQueue.main.async {
-                        self.avatarImageView.image = img
-                    }
-                }.resume()
-            }
+                guard let data else {
+                    print("error: cannot get data from \(url)")
+                    return
+                }
+                
+                guard let img = UIImage(data: data) else {
+                    print("error: cannot create image from \(url)")
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    self.avatarImageView.image = img
+                }
+            }.resume()
+            
         }
     }
 }
