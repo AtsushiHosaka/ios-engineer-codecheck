@@ -38,34 +38,15 @@ class DetailViewController: UIViewController {
 
     func fetchAvatarImage() {
         if let owner = repository?.owner {
-            let imgURL = owner.avatarUrl
+            let imgUrl = owner.avatarUrl
             
-            guard let url = URL(string: imgURL) else {
-                print("error: cannot create URL from \(imgURL)")
-                return
+            Task {
+                do {
+                    avatarImageView.image = try await URLSessionAPI.fetchImage(imgUrl: imgUrl)
+                } catch {
+                    print(error)
+                }
             }
-            
-            URLSession.shared.dataTask(with: url) { (data, res, err) in
-                if let err {
-                    print("error: \(err)")
-                    return
-                }
-                
-                guard let data else {
-                    print("error: cannot get data from \(url)")
-                    return
-                }
-                
-                guard let img = UIImage(data: data) else {
-                    print("error: cannot create image from \(url)")
-                    return
-                }
-                
-                DispatchQueue.main.async {
-                    self.avatarImageView.image = img
-                }
-            }.resume()
-            
         }
     }
 }
