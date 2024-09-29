@@ -43,16 +43,17 @@ class ViewController: UITableViewController, UISearchBarDelegate {
                     if let items = obj["items"] as? [[String: Any]] {
                         self.repo = items
                         DispatchQueue.main.async {
+                            // これ呼ばなきゃリストが更新されません
                             self.tableView.reloadData()
                         }
                     }
                 }
             }
-            // これ呼ばなきゃリストが更新されません
             task?.resume()
         }
     }
 
+    // 画面遷移時に呼ばれる
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "Detail" {
             let idx = sender as! Int
@@ -77,7 +78,6 @@ class ViewController: UITableViewController, UISearchBarDelegate {
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // 画面遷移時に呼ばれる
         performSegue(withIdentifier: "Detail", sender: indexPath.row)
     }
 }
