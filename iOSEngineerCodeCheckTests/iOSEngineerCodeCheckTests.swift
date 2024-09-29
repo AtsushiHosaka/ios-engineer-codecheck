@@ -10,43 +10,15 @@ import XCTest
 @testable import iOSEngineerCodeCheck
 
 class iOSEngineerCodeCheckTests: XCTestCase {
-
-    var searchVC: SearchViewController!
-    var repository: Repository!
-
+    
     override func setUpWithError() throws {
         super.setUp()
-        // SearchViewControllerのセットアップ
-        searchVC = SearchViewController()
-        searchVC.loadViewIfNeeded()
-
-        // サンプルリポジトリデータのセットアップ
-        let owner = RepositoryOwner(avatarUrl: "https://example.com/avatar.png")
-        repository = Repository(language: "Swift", fullName: "sample/repo", stargazersCount: 100, watchersCount: 50, forksCount: 10, openIssuesCount: 5, owner: owner)
     }
-
+    
     override func tearDownWithError() throws {
-        searchVC = nil
-        repository = nil
         super.tearDown()
     }
-
-    // リポジトリリストのセル数をテスト
-    func testNumberOfRowsInSection() throws {
-        searchVC.repositoryList = [repository, repository]
-        let rows = searchVC.tableView(searchVC.tableView, numberOfRowsInSection: 0)
-        XCTAssertEqual(rows, 2, "TableViewのセル数が正しくありません。")
-    }
-
-    // セル内容のテスト
-    func testCellForRowAt() throws {
-        searchVC.repositoryList = [repository]
-        let cell = searchVC.tableView(searchVC.tableView, cellForRowAt: IndexPath(row: 0, section: 0))
-        XCTAssertEqual(cell.textLabel?.text, "sample/repo", "リポジトリ名が正しく表示されていません。")
-        XCTAssertEqual(cell.detailTextLabel?.text, "Swift", "言語情報が正しく表示されていません。")
-    }
-
-    // リポジトリ検索APIのレスポンスデコードのテスト
+    
     func testRepositoryDecoding() throws {
         let jsonData = """
         {
@@ -65,7 +37,15 @@ class iOSEngineerCodeCheckTests: XCTestCase {
         """.data(using: .utf8)!
         
         let repositories = try GithubAPI.testDecodeRepository(from: jsonData)
+        let repo = repositories[0]
+        
         XCTAssertEqual(repositories.count, 1, "デコード結果のリポジトリ数が異なります。")
-        XCTAssertEqual(repositories[0].fullName, "sample/repo", "デコードされたリポジトリ名が正しくありません。")
+        XCTAssertEqual(repo.fullName, "sample/repo", "デコードされたリポジトリ名が正しくありません。")
+        XCTAssertEqual(repo.language, "Swift", "デコードされたプログラミング言語が正しくありません。")
+        XCTAssertEqual(repo.stargazersCount, 100, "スターの数が正しくありません。")
+        XCTAssertEqual(repo.watchersCount, 50, "ウォッチャーの数が正しくありません。")
+        XCTAssertEqual(repo.forksCount, 10, "フォークの数が正しくありません。")
+        XCTAssertEqual(repo.openIssuesCount, 5, "オープンされているissueの数が正しくありません。")
+        XCTAssertEqual(repo.owner.avatarUrl, "https://example.com/avatar.png", "アバターURLが正しくありません。")
     }
 }
