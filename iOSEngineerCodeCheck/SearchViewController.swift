@@ -26,8 +26,16 @@ class SearchViewController: UITableViewController {
     // 画面遷移時に呼ばれる
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "Detail" {
-            let selectedRepositoryIndex = sender as! Int
-            let detailViewController = segue.destination as! DetailViewController
+            guard let selectedRepositoryIndex = sender as? Int else {
+                print("error: sender is nil")
+                return
+            }
+            
+            guard let detailViewController = segue.destination as? DetailViewController else {
+                print("error: cannot cast segue.destination as? DetailViewController")
+                return
+            }
+            
             detailViewController.repository = self.repositoryList[selectedRepositoryIndex]
         }
     }
@@ -64,11 +72,19 @@ extension SearchViewController: UISearchBarDelegate {
     }
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        let searchWord = searchBar.text!
+        guard let searchWord = searchBar.text else {
+            print("error: cannot get searchbar text")
+            return
+        }
 
         if searchWord.count != 0 {
             let url = "https://api.github.com/search/repositories?q=\(searchWord)"
             networkTask = URLSession.shared.dataTask(with: URL(string: url)!) { (data, res, err) in
+                if let err {
+                    print("error: \(err)")
+                    return
+                }
+                
                 if let object = try! JSONSerialization.jsonObject(with: data!) as? [String: Any] {
                     if let items = object["items"] as? [[String: Any]] {
                         self.repositoryList = items

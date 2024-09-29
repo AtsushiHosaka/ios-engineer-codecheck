@@ -40,8 +40,27 @@ class DetailViewController: UIViewController {
 
         if let owner = repository["owner"] as? [String: Any] {
             if let imgURL = owner["avatar_url"] as? String {
-                URLSession.shared.dataTask(with: URL(string: imgURL)!) { (data, res, err) in
-                    let img = UIImage(data: data!)!
+                guard let url = URL(string: imgURL) else {
+                    print("error: cannot create URL from \(imgURL)")
+                    return
+                }
+                
+                URLSession.shared.dataTask(with: url) { (data, res, err) in
+                    if let err {
+                        print("error: \(err)")
+                        return
+                    }
+                    
+                    guard let data else {
+                        print("error: cannot get data from \(url)")
+                        return
+                    }
+                    
+                    guard let img = UIImage(data: data) else {
+                        print("error: cannot create image from \(url)")
+                        return
+                    }
+                    
                     DispatchQueue.main.async {
                         self.avatarImageView.image = img
                     }
