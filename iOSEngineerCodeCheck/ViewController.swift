@@ -62,7 +62,6 @@ class ViewController: UITableViewController, UISearchBarDelegate {
         
         if segue.identifier == "Detail"{
             let dtl = segue.destination as! ViewController2
-            dtl.vc1 = self
             dtl.repo = self.repo[idx]
         }
         
