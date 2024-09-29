@@ -11,24 +11,61 @@ import XCTest
 
 class iOSEngineerCodeCheckTests: XCTestCase {
 
+    var searchVC: SearchViewController!
+    var repository: Repository!
+
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        super.setUp()
+        // SearchViewControllerのセットアップ
+        searchVC = SearchViewController()
+        searchVC.loadViewIfNeeded()
+
+        // サンプルリポジトリデータのセットアップ
+        let owner = RepositoryOwner(avatarUrl: "https://example.com/avatar.png")
+        repository = Repository(language: "Swift", fullName: "sample/repo", stargazersCount: 100, watchersCount: 50, forksCount: 10, openIssuesCount: 5, owner: owner)
     }
 
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        searchVC = nil
+        repository = nil
+        super.tearDown()
     }
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    // リポジトリリストのセル数をテスト
+    func testNumberOfRowsInSection() throws {
+        searchVC.repositoryList = [repository, repository]
+        let rows = searchVC.tableView(searchVC.tableView, numberOfRowsInSection: 0)
+        XCTAssertEqual(rows, 2, "TableViewのセル数が正しくありません。")
     }
 
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+    // セル内容のテスト
+    func testCellForRowAt() throws {
+        searchVC.repositoryList = [repository]
+        let cell = searchVC.tableView(searchVC.tableView, cellForRowAt: IndexPath(row: 0, section: 0))
+        XCTAssertEqual(cell.textLabel?.text, "sample/repo", "リポジトリ名が正しく表示されていません。")
+        XCTAssertEqual(cell.detailTextLabel?.text, "Swift", "言語情報が正しく表示されていません。")
+    }
+
+    // リポジトリ検索APIのレスポンスデコードのテスト
+    func testRepositoryDecoding() throws {
+        let jsonData = """
+        {
+            "items": [{
+                "full_name": "sample/repo",
+                "language": "Swift",
+                "stargazers_count": 100,
+                "watchers_count": 50,
+                "forks_count": 10,
+                "open_issues_count": 5,
+                "owner": {
+                    "avatar_url": "https://example.com/avatar.png"
+                }
+            }]
         }
+        """.data(using: .utf8)!
+        
+        let repositories = try GithubAPI.testDecodeRepository(from: jsonData)
+        XCTAssertEqual(repositories.count, 1, "デコード結果のリポジトリ数が異なります。")
+        XCTAssertEqual(repositories[0].fullName, "sample/repo", "デコードされたリポジトリ名が正しくありません。")
     }
-
 }
