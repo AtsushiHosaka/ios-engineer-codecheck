@@ -9,21 +9,15 @@
 import Foundation
 
 class GithubAPI {
-    static func fetchRepositories(searchWord: String) async throws -> [Repository]? {
-        guard let url = URL(string: "https://api.github.com/search/repositories?q=\(searchWord)") else {
-            throw URLError(.badURL)
-        }
+    static func fetchRepositories(searchWord: String) async throws -> [Repository] {
+        let url = try createURL(of: "https://api.github.com/search/repositories?q=\(searchWord)")
         
         let (data, _) = try await URLSession.shared.data(from: url)
         
-        if let repositories = try decodeRepository(from: data) {
-            return repositories
-        }
-        
-        return nil
+        return try decodeRepository(from: data)
     }
     
-    static private func decodeRepository(from jsonData: Data) throws -> [Repository]? {
+    static private func decodeRepository(from jsonData: Data) throws -> [Repository] {
         let decoder = JSONDecoder()
         
         let response = try decoder.decode(GithubRepositoryResponse.self, from: jsonData)
