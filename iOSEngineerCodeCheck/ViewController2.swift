@@ -21,14 +21,10 @@ class ViewController2: UIViewController {
     @IBOutlet weak var FrksLbl: UILabel!
     @IBOutlet weak var IsssLbl: UILabel!
     
-    var vc1: ViewController!
-    
     var repo: [String: Any]=[:]
         
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let repo = vc1.repo[vc1.idx]
         
         LangLbl.text = "Written in \(repo["language"] as? String ?? "")"
         StrsLbl.text = "\(repo["stargazers_count"] as? Int ?? 0) stars"
@@ -40,8 +36,6 @@ class ViewController2: UIViewController {
     }
     
     func getImage(){
-        
-        let repo = vc1.repo[vc1.idx]
         
         TtlLbl.text = repo["full_name"] as? String
         
