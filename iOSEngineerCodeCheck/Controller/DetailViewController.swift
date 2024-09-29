@@ -30,7 +30,7 @@ class DetailViewController: UIViewController {
         fetchAvatarImage()
     }
     
-    func setLabels() {
+    private func setLabels() {
         titleLabel.text = repository?.fullName ?? "unknown"
         if let language = repository?.language {
             languageLabel.text = "Written in \(language)"
@@ -43,7 +43,7 @@ class DetailViewController: UIViewController {
         issuesLabel.text = "\(repository?.openIssuesCount ?? 0) open issues"
     }
 
-    func fetchAvatarImage() {
+    private func fetchAvatarImage() {
         if let owner = repository?.owner {
             let imgUrl = owner.avatarUrl
             

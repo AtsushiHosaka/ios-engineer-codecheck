@@ -23,7 +23,7 @@ class GithubAPI {
         return nil
     }
     
-    static func decodeRepository(from jsonData: Data) throws -> [Repository]? {
+    static private func decodeRepository(from jsonData: Data) throws -> [Repository]? {
         let decoder = JSONDecoder()
         
         let response = try decoder.decode(GithubRepositoryResponse.self, from: jsonData)
