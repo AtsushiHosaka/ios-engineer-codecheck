@@ -26,14 +26,21 @@ class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        titleLabel.text = repository?.fullName
-        languageLabel.text = "Written in \(repository?.language ?? "unknown")"
+        setLabels()
+        fetchAvatarImage()
+    }
+    
+    func setLabels() {
+        titleLabel.text = repository?.fullName ?? "unknown"
+        if let language = repository?.language {
+            languageLabel.text = "Written in \(language)"
+        } else {
+            languageLabel.text = "No language information"
+        }
         stargazersLabel.text = "\(repository?.stargazersCount ?? 0) stars"
         watchersLabel.text = "\(repository?.watchersCount ?? 0) watchers"
         forksLabel.text = "\(repository?.forksCount ?? 0) forks"
         issuesLabel.text = "\(repository?.openIssuesCount ?? 0) open issues"
-        
-        fetchAvatarImage()
     }
 
     func fetchAvatarImage() {
