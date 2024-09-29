@@ -80,6 +80,11 @@ extension SearchViewController: UISearchBarDelegate {
         if searchWord.count != 0 {
             let url = "https://api.github.com/search/repositories?q=\(searchWord)"
             networkTask = URLSession.shared.dataTask(with: URL(string: url)!) { (data, res, err) in
+                if let err {
+                    print("error: \(err)")
+                    return
+                }
+                
                 if let object = try! JSONSerialization.jsonObject(with: data!) as? [String: Any] {
                     if let items = object["items"] as? [[String: Any]] {
                         self.repositoryList = items

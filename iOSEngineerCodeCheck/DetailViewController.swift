@@ -46,6 +46,11 @@ class DetailViewController: UIViewController {
                 }
                 
                 URLSession.shared.dataTask(with: url) { (data, res, err) in
+                    if let err {
+                        print("error: \(err)")
+                        return
+                    }
+                    
                     guard let data else {
                         print("error: cannot get data from \(url)")
                         return
