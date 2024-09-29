@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  SearchViewController.swift
 //  iOSEngineerCodeCheck
 //
 //  Created by 史 翔新 on 2020/04/20.
@@ -8,40 +8,40 @@
 
 import UIKit
 
-class ViewController: UITableViewController {
+class SearchViewController: UITableViewController {
 
-    @IBOutlet weak var SchBr: UISearchBar!
+    @IBOutlet weak var searchBar: UISearchBar!
 
-    var repo: [[String: Any]] = []
+    var repositoryList: [[String: Any]] = []
 
-    var task: URLSessionTask?
+    var networkTask: URLSessionTask?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        SchBr.text = "GitHubのリポジトリを検索できるよー"
-        SchBr.delegate = self
+        searchBar.text = "GitHubのリポジトリを検索できるよー"
+        searchBar.delegate = self
     }
 
     // 画面遷移時に呼ばれる
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "Detail" {
-            let idx = sender as! Int
-            let dtl = segue.destination as! ViewController2
-            dtl.repo = self.repo[idx]
+            let selectedRepositoryIndex = sender as! Int
+            let detailViewController = segue.destination as! DetailViewController
+            detailViewController.repository = self.repositoryList[selectedRepositoryIndex]
         }
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return repo.count
+        return repositoryList.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
-        let rp = repo[indexPath.row]
+        let repository = repositoryList[indexPath.row]
 
-        cell.textLabel?.text = rp["full_name"] as? String ?? ""
-        cell.detailTextLabel?.text = rp["language"] as? String ?? ""
+        cell.textLabel?.text = repository["full_name"] as? String ?? ""
+        cell.detailTextLabel?.text = repository["language"] as? String ?? ""
         cell.tag = indexPath.row
 
         return cell
@@ -52,7 +52,7 @@ class ViewController: UITableViewController {
     }
 }
 
-extension ViewController: UISearchBarDelegate {
+extension SearchViewController: UISearchBarDelegate {
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
         // ↓こうすれば初期のテキストを消せる
         searchBar.text = ""
@@ -60,18 +60,18 @@ extension ViewController: UISearchBarDelegate {
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        task?.cancel()
+        networkTask?.cancel()
     }
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        let word = searchBar.text!
+        let searchWord = searchBar.text!
 
-        if word.count != 0 {
-            let url = "https://api.github.com/search/repositories?q=\(word)"
-            task = URLSession.shared.dataTask(with: URL(string: url)!) { (data, res, err) in
-                if let obj = try! JSONSerialization.jsonObject(with: data!) as? [String: Any] {
-                    if let items = obj["items"] as? [[String: Any]] {
-                        self.repo = items
+        if searchWord.count != 0 {
+            let url = "https://api.github.com/search/repositories?q=\(searchWord)"
+            networkTask = URLSession.shared.dataTask(with: URL(string: url)!) { (data, res, err) in
+                if let object = try! JSONSerialization.jsonObject(with: data!) as? [String: Any] {
+                    if let items = object["items"] as? [[String: Any]] {
+                        self.repositoryList = items
                         DispatchQueue.main.async {
                             // これ呼ばなきゃリストが更新されません
                             self.tableView.reloadData()
@@ -79,7 +79,7 @@ extension ViewController: UISearchBarDelegate {
                     }
                 }
             }
-            task?.resume()
+            networkTask?.resume()
         }
     }
 }
