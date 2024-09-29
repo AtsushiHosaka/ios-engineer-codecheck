@@ -33,8 +33,14 @@ class GithubAPI {
     
     struct GithubRepositoryResponse: Decodable {
         let items: [Repository]
-        let incompleteResults: Int
-        let totalCount: Int
+        let incompleteResults: Bool?
+        let totalCount: Int?
+        
+        init(items: [Repository], incompleteResults: Bool?, totalCount: Int?) {
+            self.items = items
+            self.incompleteResults = incompleteResults
+            self.totalCount = totalCount
+        }
         
         enum CodingKeys: String, CodingKey {
             case items
