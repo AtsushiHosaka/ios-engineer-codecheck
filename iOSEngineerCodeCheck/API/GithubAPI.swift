@@ -42,4 +42,9 @@ class GithubAPI {
             case totalCount = "total_count"
         }
     }
+    
+    //MARK: Test
+    static func testDecodeRepository(from jsonData: Data) throws -> [Repository] {
+        return try decodeRepository(from: jsonData)
+    }
 }
