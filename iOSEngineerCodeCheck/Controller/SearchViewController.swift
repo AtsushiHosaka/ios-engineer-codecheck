@@ -79,7 +79,7 @@ extension SearchViewController: UISearchBarDelegate {
         if searchWord.count != 0 {
             Task {
                 do {
-                    repositoryList = try await GithubAPI.fetchRepositories(searchWord: searchWord) ?? []
+                    repositoryList = try await GithubAPI.fetchRepositories(searchWord: searchWord)
                     tableView.reloadData()
                 } catch {
                     print(error)
