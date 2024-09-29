@@ -22,6 +22,8 @@ class ViewController2: UIViewController {
     @IBOutlet weak var IsssLbl: UILabel!
     
     var vc1: ViewController!
+    
+    var repo: [String: Any]=[:]
         
     override func viewDidLoad() {
         super.viewDidLoad()
