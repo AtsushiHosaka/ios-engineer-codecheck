@@ -60,7 +60,12 @@ class SearchViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        searchBar.resignFirstResponder()
         performSegue(withIdentifier: "Detail", sender: indexPath.row)
+    }
+    
+    override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        searchBar.resignFirstResponder()
     }
 }
 
@@ -82,6 +87,8 @@ extension SearchViewController: UISearchBarDelegate {
         }
 
         if searchWord.count != 0 {
+            searchBar.resignFirstResponder()
+            
             Task {
                 do {
                     repositoryList = try await GithubAPI.fetchRepositories(searchWord: searchWord)
