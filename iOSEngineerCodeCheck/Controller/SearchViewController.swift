@@ -67,15 +67,7 @@ class SearchViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let repository = repositoryList[indexPath.row]
         
-        var content = cell.defaultContentConfiguration()
-        content.text = repository.fullName
-        content.secondaryText = repository.language
-        
-        content.textProperties.font = UIFont(name: "Futura-Bold", size: 17) ?? .systemFont(ofSize: 17)
-        content.secondaryTextProperties.font = UIFont(name: "Futura-Medium", size: 15) ?? .systemFont(ofSize: 15)
-        
-        content.textProperties.color = UIColor.label
-        content.secondaryTextProperties.color = UIColor.label
+        var content = createCellConfig(for: cell, repository: repository)
 
         if let avatarImage = repository.owner.image {
             content.image = avatarImage
@@ -84,9 +76,6 @@ class SearchViewController: UITableViewController {
             fetchAvatarImage(for: repository, at: indexPath)
         }
         
-        content.imageProperties.maximumSize = CGSize(width: 40, height: 40)
-        content.imageProperties.cornerRadius = 20
-        
         cell.contentConfiguration = content
     }
 
@@ -94,12 +83,22 @@ class SearchViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         let repository = repositoryList[indexPath.row]
         
+        let content = createCellConfig(for: cell, repository: repository)
+        
+        cell.contentConfiguration = content
+        cell.tag = indexPath.row
+
+        return cell
+    }
+    
+    private func createCellConfig(for cell: UITableViewCell, repository: Repository) -> UIListContentConfiguration {
         var content = cell.defaultContentConfiguration()
+        
         content.text = repository.fullName
         content.secondaryText = repository.language
 
-        content.textProperties.font = UIFont(name: "Futura-Bold", size: 17) ?? .systemFont(ofSize: 17)
-        content.secondaryTextProperties.font = UIFont(name: "Futura-Medium", size: 15) ?? .systemFont(ofSize: 17)
+        content.textProperties.font = UIFont(name: "Futura-Medium", size: 17) ?? .systemFont(ofSize: 17)
+        content.secondaryTextProperties.font = UIFont(name: "Futura-Medium", size: 13) ?? .systemFont(ofSize: 13)
         
         content.textProperties.color = UIColor.label
         content.secondaryTextProperties.color = UIColor.label
@@ -109,10 +108,7 @@ class SearchViewController: UITableViewController {
         content.imageProperties.maximumSize = CGSize(width: 40, height: 40)
         content.imageProperties.cornerRadius = 20
         
-        cell.contentConfiguration = content
-        cell.tag = indexPath.row
-
-        return cell
+        return content
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
