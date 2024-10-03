@@ -22,18 +22,14 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var issuesLabel: UILabel!
 
     var repository: Repository?
-    
-    var activityIndicator = UIActivityIndicatorView(style: .medium)
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        setLabels()
-        setupActivityIndicator()
-        fetchAvatarImage()
+        setupComponents()
     }
 
-    private func setLabels() {
+    private func setupComponents() {
         titleLabel.text = repository?.fullName ?? "unknown"
         if let language = repository?.language {
             languageLabel.text = "Written in \(language)"
@@ -44,36 +40,7 @@ class DetailViewController: UIViewController {
         watchersLabel.text = "\(repository?.watchersCount ?? 0) watchers"
         forksLabel.text = "\(repository?.forksCount ?? 0) forks"
         issuesLabel.text = "\(repository?.openIssuesCount ?? 0) open issues"
-    }
-
-    private func setupActivityIndicator() {
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        avatarImageView.addSubview(activityIndicator)
         
-        NSLayoutConstraint.activate([
-            activityIndicator.centerXAnchor.constraint(equalTo: avatarImageView.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: avatarImageView.centerYAnchor)
-        ])
-        
-        activityIndicator.hidesWhenStopped = true
-    }
-
-    private func fetchAvatarImage() {
-        if let owner = repository?.owner {
-            let imgUrl = owner.avatarUrl
-
-            activityIndicator.startAnimating()
-            
-            Task {
-                do {
-                    avatarImageView.image = try await URLSessionAPI.fetchImage(imgUrl: imgUrl)
-                } catch {
-                    print(error)
-                    avatarImageView.image = UIImage(systemName: "person.circle")
-                }
-
-                activityIndicator.stopAnimating()
-            }
-        }
+        avatarImageView.image = repository?.owner.image ?? UIImage(systemName: "person.fill")
     }
 }
