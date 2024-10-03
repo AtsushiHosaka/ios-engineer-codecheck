@@ -31,6 +31,10 @@ class SearchViewController: UITableViewController {
         searchBar.placeholder = "GitHubのリポジトリを検索できるよー"
         searchBar.delegate = self
         
+        if let searchTextField = searchBar.value(forKey: "searchTextField") as? UITextField {
+            searchTextField.font = UIFont(name: "Futura-Medium", size: 16)
+        }
+        
         // MARK: Test
         searchBar.accessibilityTraits = .searchField
         searchBar.accessibilityIdentifier = "searchBar"
