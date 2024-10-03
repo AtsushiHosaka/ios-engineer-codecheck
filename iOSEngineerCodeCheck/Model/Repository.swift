@@ -16,7 +16,7 @@ struct Repository: Decodable {
     let watchersCount: Int
     let forksCount: Int
     let openIssuesCount: Int
-    let owner: RepositoryOwner
+    var owner: RepositoryOwner
     
     init(language: String?, fullName: String, stargazersCount: Int, watchersCount: Int, forksCount: Int, openIssuesCount: Int, owner: RepositoryOwner) {
         self.language = language
