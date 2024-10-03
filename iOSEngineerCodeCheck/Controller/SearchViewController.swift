@@ -20,17 +20,25 @@ class SearchViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setupSearchBar()
+        setupActivityIndicator()
+    }
+    
+    func setupSearchBar() {
         searchBar.placeholder = "GitHubのリポジトリを検索できるよー"
         searchBar.delegate = self
-        
-        activityIndicator.center = self.view.center
-        self.view.addSubview(activityIndicator)
-        activityIndicator.hidesWhenStopped = true
         
         // MARK: Test
         searchBar.accessibilityTraits = .searchField
         searchBar.accessibilityIdentifier = "searchBar"
         searchBar.isAccessibilityElement = true
+    }
+    
+    func setupActivityIndicator() {
+        activityIndicator.center = self.view.center
+        self.view.addSubview(activityIndicator)
+        activityIndicator.hidesWhenStopped = true
     }
 
     // 画面遷移時に呼ばれる
