@@ -49,11 +49,14 @@ class SearchViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         let repository = repositoryList[indexPath.row]
-
-        cell.textLabel?.text = repository.fullName
-        cell.detailTextLabel?.text = repository.language
+        
+        var content = cell.defaultContentConfiguration()
+        content.text = repository.fullName
+        content.secondaryText = repository.language
+        
+        cell.contentConfiguration = content
         cell.tag = indexPath.row
 
         return cell
