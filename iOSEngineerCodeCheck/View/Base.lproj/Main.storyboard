@@ -111,7 +111,13 @@
                             <constraint firstItem="dzB-ib-5dZ" firstAttribute="leading" secondItem="4gp-25-lRZ" secondAttribute="leading" constant="8" id="jhK-QC-4Tl"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="J6o-vL-S1z"/>
+                    <navigationItem key="navigationItem" id="J6o-vL-S1z">
+                        <barButtonItem key="rightBarButtonItem" title="Item" image="arrow.up.right.square" catalog="system" id="GDR-RC-dDE">
+                            <connections>
+                                <action selector="openLinkButtonTapped:" destination="AHY-RL-7mG" id="vDG-UN-EWi"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="avatarImageView" destination="Iim-eb-8Ad" id="dmH-tP-ZuI"/>
                         <outlet property="forksLabel" destination="ZMv-4f-X2V" id="i84-sH-c5t"/>
@@ -153,6 +159,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="arrow.up.right.square" catalog="system" width="128" height="114"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import WebKit
 
 class DetailViewController: UIViewController {
 
@@ -44,5 +45,18 @@ class DetailViewController: UIViewController {
         avatarImageView.image = repository?.owner.image ?? UIImage(systemName: "person.fill")
         avatarImageView.layer.cornerRadius = 20
         avatarImageView.layer.cornerCurve = .continuous
+    }
+    
+    @IBAction func openLinkButtonTapped(_ sender: UIButton) {
+        guard let htmlUrlString = repository?.htmlUrl else {
+            print("error: htmlUrlString is nil")
+            return
+        }
+        
+        if let url = URL(string: htmlUrlString) {
+            UIApplication.shared.open(url)
+        } else {
+            print("無効なURLです")
+        }
     }
 }
