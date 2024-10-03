@@ -16,15 +16,17 @@ struct Repository: Decodable {
     let watchersCount: Int
     let forksCount: Int
     let openIssuesCount: Int
+    let htmlUrl: String
     var owner: RepositoryOwner
     
-    init(language: String?, fullName: String, stargazersCount: Int, watchersCount: Int, forksCount: Int, openIssuesCount: Int, owner: RepositoryOwner) {
+    init(language: String?, fullName: String, stargazersCount: Int, watchersCount: Int, forksCount: Int, openIssuesCount: Int, htmlUrl: String, owner: RepositoryOwner) {
         self.language = language
         self.fullName = fullName
         self.stargazersCount = stargazersCount
         self.watchersCount = watchersCount
         self.forksCount = forksCount
         self.openIssuesCount = openIssuesCount
+        self.htmlUrl = htmlUrl
         self.owner = owner
     }
     
@@ -35,6 +37,7 @@ struct Repository: Decodable {
         case watchersCount = "watchers_count"
         case forksCount = "forks_count"
         case openIssuesCount = "open_issues_count"
+        case htmlUrl = "html_url"
         case owner
     }
 }
