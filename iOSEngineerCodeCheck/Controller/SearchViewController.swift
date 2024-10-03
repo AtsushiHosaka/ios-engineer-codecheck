@@ -71,6 +71,12 @@ class SearchViewController: UITableViewController {
         content.text = repository.fullName
         content.secondaryText = repository.language
         
+        content.textProperties.font = UIFont(name: "Futura-Bold", size: 17) ?? .systemFont(ofSize: 17)
+        content.secondaryTextProperties.font = UIFont(name: "Futura-Medium", size: 15) ?? .systemFont(ofSize: 15)
+        
+        content.textProperties.color = UIColor.label
+        content.secondaryTextProperties.color = UIColor.label
+
         if let avatarImage = repository.owner.image {
             content.image = avatarImage
         } else {
@@ -91,6 +97,13 @@ class SearchViewController: UITableViewController {
         var content = cell.defaultContentConfiguration()
         content.text = repository.fullName
         content.secondaryText = repository.language
+
+        content.textProperties.font = UIFont(name: "Futura-Bold", size: 17) ?? .systemFont(ofSize: 17)
+        content.secondaryTextProperties.font = UIFont(name: "Futura-Medium", size: 15) ?? .systemFont(ofSize: 17)
+        
+        content.textProperties.color = UIColor.label
+        content.secondaryTextProperties.color = UIColor.label
+
         content.image = UIImage(systemName: "person.circle")
         
         content.imageProperties.maximumSize = CGSize(width: 40, height: 40)
