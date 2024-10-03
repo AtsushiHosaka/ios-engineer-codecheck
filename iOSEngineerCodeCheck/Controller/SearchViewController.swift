@@ -82,6 +82,8 @@ extension SearchViewController: UISearchBarDelegate {
         }
 
         if searchWord.count != 0 {
+            searchBar.resignFirstResponder()
+            
             Task {
                 do {
                     repositoryList = try await GithubAPI.fetchRepositories(searchWord: searchWord)
