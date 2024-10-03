@@ -42,5 +42,7 @@ class DetailViewController: UIViewController {
         issuesLabel.text = "\(repository?.openIssuesCount ?? 0) open issues"
         
         avatarImageView.image = repository?.owner.image ?? UIImage(systemName: "person.fill")
+        avatarImageView.layer.cornerRadius = 20
+        avatarImageView.layer.cornerCurve = .continuous
     }
 }
