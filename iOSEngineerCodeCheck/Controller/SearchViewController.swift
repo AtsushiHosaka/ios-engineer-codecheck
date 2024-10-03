@@ -29,7 +29,7 @@ class SearchViewController: UITableViewController {
 
     // 画面遷移時に呼ばれる
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "Detail" {
+        if segue.identifier == SegueDestination.detail.rawValue {
             guard let selectedRepositoryIndex = sender as? Int else {
                 print("error: sender is nil")
                 return
@@ -61,11 +61,15 @@ class SearchViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         searchBar.resignFirstResponder()
-        performSegue(withIdentifier: "Detail", sender: indexPath.row)
+        performSegue(withIdentifier: SegueDestination.detail.rawValue, sender: indexPath.row)
     }
     
     override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         searchBar.resignFirstResponder()
+    }
+    
+    enum SegueDestination: String {
+        case detail = "Detail"
     }
 }
 
