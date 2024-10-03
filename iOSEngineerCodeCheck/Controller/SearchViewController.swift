@@ -16,12 +16,18 @@ class SearchViewController: UITableViewController {
 
     var networkTask: URLSessionTask?
 
+    var activityIndicator = UIActivityIndicatorView(style: .large)
+
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBar.placeholder = "GitHubのリポジトリを検索できるよー"
         searchBar.delegate = self
         
-        //MARK: Test
+        activityIndicator.center = self.view.center
+        self.view.addSubview(activityIndicator)
+        activityIndicator.hidesWhenStopped = true
+        
+        // MARK: Test
         searchBar.accessibilityTraits = .searchField
         searchBar.accessibilityIdentifier = "searchBar"
         searchBar.isAccessibilityElement = true
@@ -95,6 +101,8 @@ extension SearchViewController: UISearchBarDelegate {
 
         if searchWord.count != 0 {
             searchBar.resignFirstResponder()
+
+            activityIndicator.startAnimating()
             
             Task {
                 do {
@@ -103,6 +111,8 @@ extension SearchViewController: UISearchBarDelegate {
                 } catch {
                     print(error)
                 }
+
+                activityIndicator.stopAnimating()
             }
         }
     }
